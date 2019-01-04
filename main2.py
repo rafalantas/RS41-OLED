@@ -67,7 +67,7 @@ def stats(device):
         if device.height >= 32:
             draw.text((0, 26), longitute(last_line(file)), font=font2, fill="white")
 
-	if device.height >=48:
+        if device.height >=48:
             draw.text((0, 38), latitude(last_line(file)), font=font2, fill="white")
 
             try:
@@ -83,12 +83,12 @@ def main():
 #	print last_line(file)
 #	last_line = last_line(file)
 #	print last_line
-	stats(device)
-	print SondeID(last_line(file))
-	print date(last_line(file))
-	print longitute(last_line(file))
-	print latitude(last_line(file))
-	print altitude(last_line(file))
+        stats(device)
+        print SondeID(last_line(file))
+	    print date(last_line(file))
+	    print longitute(last_line(file))
+	    print latitude(last_line(file))
+	    print altitude(last_line(file))
 	time.sleep(5)
 
 if __name__ == "__main__":
