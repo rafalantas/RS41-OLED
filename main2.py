@@ -50,7 +50,8 @@ def latitude(last_line):
 
 def altitude(last_line):
         altitude = last_line.split(',')[5]
-        return "Alt: %s " % altitude
+        temp = last_line.split(',')[6]
+        return "Alt: %s m Temp: %s" % (altitude, temp)
 
 def stats(device):
     # use custom font
