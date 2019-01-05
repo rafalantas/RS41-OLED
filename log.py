@@ -31,12 +31,12 @@ def line_count(file):
 
 
 def function_last_line(file,x):
-        file = file
-	x = x
-        with open(file, 'r') as f:
-                lines = f.readlines()[-x]
-                last_line = lines.split(',')[1]
-                last_line = last_line.split(':')[1]
+    file = file
+    x = x
+            with open(file, 'r') as f:
+            lines = f.readlines()[-x]
+            last_line = lines.split(',')[1]
+            last_line = last_line.split(':')[1]
         return last_line
 
 

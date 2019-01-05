@@ -19,14 +19,24 @@ except ImportError:
 
 import commands
 
-file = commands.getoutput("ls -d /home/rafal/radiosonde_auto_rx/auto_rx/log/* | grep sonde.log | tail -n 1")
 
-def last_line(file):
-#	file = file
-	with open(file, 'r') as f:
+def find_log():
+    systemlog = commands.getoutput("ls -d /home/rafal/radiosonde_auto_rx/auto_rx/log/* | grep system | tail -n 1")
+    tele = commands.getoutput("cat \"" + systemlog + "\"| grep 'Telemetry Logger - O\|Telemetry Logger - U'")
+    if tele:
+            tele = tele.split(',')[1]
+            tele = tele.split('/')[2]
+    else:
+        tele = None
+    
+    return tele
+
+def last_line():
+    path = "/home/rafal/radiosonde_auto_rx/auto_rx/log/" + find_log()
+    with open(path, 'r') as f:
     		lines = f.read().splitlines()
     		last_line = lines[-1]
-	return last_line
+    return last_line
 
 def SondeID(last_line):
         ID = last_line.split(',')[1]
@@ -60,36 +70,31 @@ def stats(device):
     font2 = ImageFont.truetype(font_path, 12)
 
     with canvas(device) as draw:
-        draw.text((0, 0), SondeID(last_line(file)), font=font2, fill="white")
-        if device.height >= 16:
-            draw.text((0, 14), date(last_line(file)), font=font2, fill="white")
-
-        if device.height >= 32:
-            draw.text((0, 26), longitute(last_line(file)), font=font2, fill="white")
-
-        if device.height >=48:
-            draw.text((0, 38), latitude(last_line(file)), font=font2, fill="white")
-
+        if  find_log() is None:
+            draw.text((0, 0), "No sonde decoded", font=font2, fill="white")
+        else:
+            draw.text((0, 0), SondeID(last_line()), font=font2, fill="white")
+            if device.height >= 16:
+                draw.text((0, 14), date(last_line()), font=font2, fill="white")
+            if device.height >= 32:
+                draw.text((0, 26), longitute(last_line()), font=font2, fill="white")
+            if device.height >=48:
+                draw.text((0, 38), latitude(last_line()), font=font2, fill="white")
             try:
-                draw.text((0, 50), altitude(last_line(file)), font=font2, fill="white")
+                draw.text((0, 50), altitude(last_line()), font=font2, fill="white")
             except KeyError:
                 pass
 
-#print last_line(file)
 def main():
-    global last_line
     while True:
-	#print SondeID(last_line(file))
-#	print last_line(file)
-#	last_line = last_line(file)
-#	print last_line
         stats(device)
-        print SondeID(last_line(file))
-	    print date(last_line(file))
-	    print longitute(last_line(file))
-	    print latitude(last_line(file))
-	    print altitude(last_line(file))
-	time.sleep(5)
+        print find_log()
+#        print SondeID(last_line())
+#        print date(last_line())
+#        print longitute(last_line())
+#        print latitude(last_line())
+#        print altitude(last_line())
+        time.sleep(5)
 
 if __name__ == "__main__":
     try:
