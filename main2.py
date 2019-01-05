@@ -31,6 +31,21 @@ def find_log():
     
     return tele
 
+def last_line_system():
+    path = commands.getoutput("ls -d /home/rafal/radiosonde_auto_rx/auto_rx/log/* | grep system | tail -n 1")
+    with open(path, 'r') as f:
+            lines = f.readlines()[-1]
+            last_line = lines[-1]
+            try:
+                last_line = lines.split(',')[1]
+            except:
+                pass
+            try:
+                last_line = last_line.split(':')[1]
+            except:
+                pass
+    return last_line
+
 def last_line():
     path = "/home/rafal/radiosonde_auto_rx/auto_rx/log/" + find_log()
     with open(path, 'r') as f:
@@ -72,6 +87,8 @@ def stats(device):
     with canvas(device) as draw:
         if  find_log() is None:
             draw.text((0, 0), "No sonde decoded", font=font2, fill="white")
+            if device.height >= 16:
+                draw.text((0, 14), last_line_system(), font=font2, fill="white")
         else:
             draw.text((0, 0), SondeID(last_line()), font=font2, fill="white")
             if device.height >= 16:
@@ -88,7 +105,7 @@ def stats(device):
 def main():
     while True:
         stats(device)
-        print find_log()
+#        print find_log()
 #        print SondeID(last_line())
 #        print date(last_line())
 #        print longitute(last_line())
@@ -102,4 +119,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
