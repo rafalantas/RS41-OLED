@@ -1,0 +1,10 @@
+[Unit]
+Description=My Script Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python /home/rafal/luma.examples/examples/main2.py --i2c-port 0
+
+[Install]
+WantedBy=multi-user.target
